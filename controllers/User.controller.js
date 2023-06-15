@@ -58,3 +58,29 @@ module.exports.deleteOneStatic = async (req, res, next) => {
     }
 }
 
+//static method
+//user update
+module.exports.updateOneStatic = async (req, res, next) => {
+    try {
+        const {params: {id}} = req;
+        const rowCount = await User.update(req.body, {where: {id: Number(id)}}); // return deleted rows count
+        if (rowCount) {
+            return res.status(200);
+        }
+        res.status(404).send('not found');
+    } catch (err) {
+        next(err);
+    }
+}
+
+module.exports.updateOne = async (req, res, next) => {
+    try {
+        const {params: {id}} = req;
+        const foundedUser = await User.findByPk(id); //return instance of User
+        const returnedValue = await foundedUser.update(req.body, {returning: true});
+        res.status(200).send(returnedValue);
+    } catch (err) {
+        console.log(err);
+        next(err);
+    }
+}
