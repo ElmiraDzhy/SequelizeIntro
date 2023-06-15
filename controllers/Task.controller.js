@@ -23,14 +23,42 @@ module.exports.createOne = async (req, res, next) => {
     }
 }
 
-module.exports.getAllUserTasks = async (req, res, next)=> {
-    try{
+module.exports.getAllUserTasks = async (req, res, next) => {
+    try {
         const {params: {id: userId}} = req;
         const userInstance = await User.findByPk(userId);
         const userTasks = await userInstance.getTasks();
         res.status(200).send(userTasks);
 
-    }catch(err){
-    next(err);
+    } catch (err) {
+        next(err);
+    }
+}
+
+module.exports.updateOne = async (req, res, next) => {
+    try {
+        const {params: {id}} = req; //task id
+        const {body} = req; // data for updating
+        const [rows, data] = await Task.update(body, {where: {id: Number(id)}, returning: true});
+        if (rows) {
+            return res.status(200).send(data);
+        }
+        res.status(404).send('not found');
+    } catch
+        (err) {
+        next(err);
+    }
+}
+
+module.exports.deleteOne = async (req, res, next) => {
+    try {
+        const {params: {userId, taskId}} = req; //task id
+        const taskToRemove = await Task.findByPk(taskId);
+        const userInstance = await User.findByPk(userId);
+        const result = await userInstance.removeTask(taskToRemove);
+
+        res.status(200).send('success')
+    } catch (err) {
+        next(err);
     }
 }

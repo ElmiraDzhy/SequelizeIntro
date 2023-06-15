@@ -10,5 +10,7 @@ apiRouter.delete('/users/:id', UserController.deleteOne);
 
 apiRouter.post('/tasks/', TaskController.createOne);
 apiRouter.get('/tasks/:id', TaskController.getAllUserTasks);
+apiRouter.put('/tasks/:id', TaskController.updateOne);
+apiRouter.delete('/tasks/:userId/:taskId', TaskController.deleteOne);
 
 module.exports = apiRouter;
