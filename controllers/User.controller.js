@@ -15,7 +15,7 @@ module.exports.getOne = async (req, res, next) => {
     const {id} = req.params;
     try {
         const user = await User.findByPk(id);
-        res.status(200).send(user);
+        res.status(200).send({data: user});
     } catch (err) {
         console.log(err);
         next(err);
@@ -25,7 +25,7 @@ module.exports.getOne = async (req, res, next) => {
 module.exports.getAll = async (req, res, next) => {
     try {
         const users = await User.findAll();
-        res.status(200).send(users);
+        res.status(200).send({data: users});
     } catch (err) {
         console.log(err);
         next(err);
@@ -37,7 +37,7 @@ module.exports.deleteOne = async (req, res, next) => {
         const {params: {id}} = req;
         const foundedUser = await User.findByPk(id); //return instance of User
         const returnedValue = await foundedUser.destroy();
-        res.status(200).send(returnedValue);
+        res.status(200).send({meta: returnedValue});
     } catch (err) {
         console.log(err);
         next(err);
@@ -84,3 +84,11 @@ module.exports.updateOne = async (req, res, next) => {
         next(err);
     }
 }
+
+/*
+* api
+*
+* data - info (object)
+* errors - errors if exist (object)
+* meta - metainfo is exist
+*/
