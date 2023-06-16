@@ -54,10 +54,13 @@ module.exports.deleteOne = async (req, res, next) => {
     try {
         const {params: {userId, taskId}} = req; //task id
         const taskToRemove = await Task.findByPk(taskId);
-        const userInstance = await User.findByPk(userId);
-        const result = await userInstance.removeTask(taskToRemove);
-
-        res.status(200).send('success')
+        // const userInstance = await User.findByPk(userId);
+        // const result = await userInstance.removeTask(taskToRemove);
+        if(!taskToRemove){
+            return res.status(404).send('Task not found');
+        }
+        const result = await taskToRemove.destroy()
+        res.status(204).send();
     } catch (err) {
         next(err);
     }
