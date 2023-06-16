@@ -27,7 +27,6 @@ module.exports.getOne = async (req, res, next) => {
 }
 
 module.exports.getAll = async (req, res, next) => {
-    //todo : fix this method
     try {
         const {pagination} = req;
         // have pagination object already
