@@ -29,9 +29,35 @@ module.exports.addUserToGroup = async (req, res, next) => {
 module.exports.countUsersInGroup = async (req, res, next) => {
     try {
         const {params: {id}} = req;
-        const groupInstance = await Group.findByPk(id);
+        const groupInstance = await Group.findByPk(Number(id));
+        console.log(groupInstance)
         const result = await groupInstance.countUsers();
+        console.log(result)
         res.status(200).send({data: {users: result}});
+    } catch (err) {
+        next(err)
+    }
+}
+
+//todo : fix bug here:
+module.exports.getGroupWithUsers = async (req, res, next) => {
+    console.log('here')
+    try {
+        const {params: {id}} = req;
+        const groupWithMembers = await Group.findAll(
+            {
+                include: [{
+                    model: User,
+                    attributes: {
+                        exclude: ['password']
+                    }
+                }],
+                where: {
+                    id: Number(id)
+                }
+            }
+        );
+        res.status(200).send({data: groupWithMembers})
     } catch (err) {
         next(err)
     }
@@ -39,7 +65,11 @@ module.exports.countUsersInGroup = async (req, res, next) => {
 
 module.exports.removeUserFromGroup = async (req, res, next) => {
     try {
-
+        const {params: {groupId, userId}} = req;
+        const groupInstance = await Group.findByPk(groupId);
+        const userInstance = await User.findByPk(userId);
+        const result = await groupInstance.removeUser(userInstance);
+        res.status(200).send({data: {rows: result}});
     } catch (err) {
         next(err)
     }
@@ -55,7 +85,10 @@ module.exports.updateGroup = async (req, res, next) => {
 
 module.exports.removeGroup = async (req, res, next) => {
     try {
-
+        const {params: {groupId} } = req;
+        const result = await Group.destroy({where: {id: Number(groupId)}});
+        console.log(result)
+        res.status(200).send({data: result});
     } catch (err) {
         next(err)
     }

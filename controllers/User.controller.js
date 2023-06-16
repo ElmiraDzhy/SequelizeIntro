@@ -1,5 +1,6 @@
 const {User} = require('../models/index');
 const createError = require('http-errors');
+const {Group} = require("../models");
 
 module.exports.createOne = async (req, res, next) => {
     try {
@@ -96,6 +97,28 @@ module.exports.updateOne = async (req, res, next) => {
     }
 }
 
+module.exports.getUserWithGroups = async (req, res, next) => {
+    console.log('here')
+    try {
+        const {params: {id}} = req;
+        const userWithGroups = await User.findAll(
+            {
+                include: [{
+                    model: Group,
+                    attributes: {
+                        exclude: ['password']
+                    }
+                }],
+                where: {
+                    id: id
+                }
+            }
+        );
+        res.status(200).send({data: userWithGroups})
+    } catch (err) {
+        next(err)
+    }
+}
 
 /*
 * api
