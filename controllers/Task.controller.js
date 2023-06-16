@@ -56,7 +56,7 @@ module.exports.deleteOne = async (req, res, next) => {
         const taskToRemove = await Task.findByPk(taskId);
         // const userInstance = await User.findByPk(userId);
         // const result = await userInstance.removeTask(taskToRemove);
-        if(!taskToRemove){
+        if (!taskToRemove) {
             return res.status(404).send('Task not found');
         }
         const result = await taskToRemove.destroy()
@@ -66,3 +66,14 @@ module.exports.deleteOne = async (req, res, next) => {
     }
 }
 
+module.exports.getTaskQuantity = async (req, res, next) => {
+    try {
+        const {params: {id}} = req;
+        const user = await User.findByPk(id);
+        const quantity = await user.countTasks();
+        res.status(200).send({data: quantity});
+    } catch (err) {
+        next(err);
+    }
+
+}
