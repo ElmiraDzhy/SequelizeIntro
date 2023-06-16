@@ -7,6 +7,7 @@ app.use(bodyParser);
 app.use('/api', apiRouter);
 
 app.use(function (err, req, res, next) {
-    res.status(500).send({errors: err});
+    const statusErr = err.status || 500;
+    res.status(statusErr).send({errors: err.message || 'Server error'});
 })
 module.exports = app;

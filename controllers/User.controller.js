@@ -1,4 +1,5 @@
 const {User} = require('../models/index');
+const createError = require('http-errors');
 
 module.exports.createOne = async (req, res, next) => {
     try {
@@ -15,9 +16,12 @@ module.exports.getOne = async (req, res, next) => {
     const {id} = req.params;
     try {
         const user = await User.findByPk(id);
+        if (!user) {
+            const error = createError(404, 'User not found');
+            return next(error);
+        }
         res.status(200).send({data: user});
     } catch (err) {
-        console.log(err);
         next(err);
     }
 }
@@ -26,7 +30,7 @@ module.exports.getAll = async (req, res, next) => {
     //todo : fix this method
     try {
         const {pagination} = req;
-       // have pagination object already
+        // have pagination object already
         const users = await User.findAll({
             attributes: {
                 exclude: ['password']
@@ -92,7 +96,6 @@ module.exports.updateOne = async (req, res, next) => {
         next(err);
     }
 }
-
 
 
 /*
