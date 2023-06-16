@@ -60,7 +60,7 @@ module.exports.deleteOne = async (req, res, next) => {
             return res.status(404).send('Task not found');
         }
         const result = await taskToRemove.destroy()
-        res.status(204).send();
+        res.status(204).send({data: result});
     } catch (err) {
         next(err);
     }

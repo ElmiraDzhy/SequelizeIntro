@@ -34,7 +34,7 @@ module.exports.getAll = async (req, res, next) => {
             attributes: {
                 exclude: ['password']
             },
-            ...req.pagination
+            ...pagination
         });
         res.status(200).send({data: users});
     } catch (err) {
@@ -102,5 +102,5 @@ module.exports.updateOne = async (req, res, next) => {
 *
 * data - info (object)
 * errors - errors if exist (object)
-* meta - metainfo is exist
+* meta - meta-info is exist
 */
