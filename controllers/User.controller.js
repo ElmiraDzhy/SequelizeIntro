@@ -23,8 +23,16 @@ module.exports.getOne = async (req, res, next) => {
 }
 
 module.exports.getAll = async (req, res, next) => {
+    //todo : fix this method
     try {
-        const users = await User.findAll();
+        const {pagination} = req;
+       // have pagination object already
+        const users = await User.findAll({
+            attributes: {
+                exclude: ['password']
+            },
+            ...req.pagination
+        });
         res.status(200).send({data: users});
     } catch (err) {
         console.log(err);
