@@ -30,16 +30,13 @@ module.exports.countUsersInGroup = async (req, res, next) => {
     try {
         const {params: {id}} = req;
         const groupInstance = await Group.findByPk(Number(id));
-        console.log(groupInstance)
         const result = await groupInstance.countUsers();
-        console.log(result)
         res.status(200).send({data: {users: result}});
     } catch (err) {
         next(err)
     }
 }
 
-//todo : fix bug here:
 module.exports.getGroupWithUsers = async (req, res, next) => {
     console.log('here')
     try {
@@ -57,7 +54,7 @@ module.exports.getGroupWithUsers = async (req, res, next) => {
                 }
             }
         );
-        res.status(200).send({data: groupWithMembers})
+        res.status(200).send({data: groupWithMembers});
     } catch (err) {
         next(err)
     }
@@ -77,7 +74,10 @@ module.exports.removeUserFromGroup = async (req, res, next) => {
 
 module.exports.updateGroup = async (req, res, next) => {
     try {
-
+        const {params: {groupId} } = req;
+        const group = await Group.findByPk(groupId)
+        const updatedGroup = await group.update(req.body, {returning: true});
+        res.status(200).send({data: updatedGroup})
     } catch (err) {
         next(err)
     }
@@ -89,14 +89,6 @@ module.exports.removeGroup = async (req, res, next) => {
         const result = await Group.destroy({where: {id: Number(groupId)}});
         console.log(result)
         res.status(200).send({data: result});
-    } catch (err) {
-        next(err)
-    }
-}
-
-module.exports.getGroupWithUsers = async (req, res, next) => {
-    try {
-
     } catch (err) {
         next(err)
     }

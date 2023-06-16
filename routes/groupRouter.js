@@ -8,5 +8,6 @@ groupRouter.get('/:id/count', GroupController.countUsersInGroup);
 groupRouter.get('/:id', GroupController.getGroupWithUsers);
 groupRouter.delete('/:groupId/:userId', GroupController.removeUserFromGroup);
 groupRouter.delete('/:groupId', GroupController.removeGroup);
+groupRouter.patch('/:groupId', GroupController.updateGroup);
 
 module.exports = groupRouter;
