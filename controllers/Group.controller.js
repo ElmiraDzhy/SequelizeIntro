@@ -74,7 +74,7 @@ module.exports.removeUserFromGroup = async (req, res, next) => {
 
 module.exports.updateGroup = async (req, res, next) => {
     try {
-        const {params: {groupId} } = req;
+        const {params: {groupId}} = req;
         const group = await Group.findByPk(groupId)
         const updatedGroup = await group.update(req.body, {returning: true});
         res.status(200).send({data: updatedGroup})
@@ -85,11 +85,20 @@ module.exports.updateGroup = async (req, res, next) => {
 
 module.exports.removeGroup = async (req, res, next) => {
     try {
-        const {params: {groupId} } = req;
+        const {params: {groupId}} = req;
         const result = await Group.destroy({where: {id: Number(groupId)}});
         console.log(result)
         res.status(200).send({data: result});
     } catch (err) {
         next(err)
+    }
+}
+
+module.exports.createImage = async (req, res, next) => {
+    try {
+        console.log(req);
+        res.satus(200).send('');
+    } catch (err) {
+        next(err);
     }
 }
