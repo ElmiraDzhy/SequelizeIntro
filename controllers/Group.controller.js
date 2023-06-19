@@ -96,8 +96,13 @@ module.exports.removeGroup = async (req, res, next) => {
 
 module.exports.createImage = async (req, res, next) => {
     try {
-        console.log(req);
-        res.satus(200).send('');
+        const {params: {groupId}} = req;
+        const imagePath = {
+            imagePath: `${req.file.filename}`
+        }
+        const group = await Group.findByPk(groupId);
+        const updatedGroup = await group.update(imagePath, {returning: true});
+        res.status(200).send(updatedGroup);
     } catch (err) {
         next(err);
     }
